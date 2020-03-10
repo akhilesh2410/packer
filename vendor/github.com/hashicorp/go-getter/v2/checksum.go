@@ -198,12 +198,15 @@ func (c *Client) ChecksumFromFile(ctx context.Context, checksumURL, checksummedP
 		return nil, err
 	}
 
+	println("hi !")
+
 	tempfile, err := tmpFile("", filepath.Base(checksumFileURL.Path))
 	if err != nil {
 		return nil, err
 	}
 	defer os.Remove(tempfile)
 
+	println("hi 2")
 	req := &Request{
 		// Pwd:              c.Pwd, TODO(adrien): pass pwd ?
 		Mode: ModeFile,
@@ -211,16 +214,19 @@ func (c *Client) ChecksumFromFile(ctx context.Context, checksumURL, checksummedP
 		Dst:  tempfile,
 		// ProgressListener: c.ProgressListener, TODO(adrien): pass progress bar ?
 	}
+	println("src: "+ req.Src)
 	if _, err = c.Get(ctx, req); err != nil {
 		return nil, fmt.Errorf(
 			"Error downloading checksum file: %s", err)
 	}
 
+	println("hi 3")
 	filename := filepath.Base(checksummedPath)
 	absPath, err := filepath.Abs(checksummedPath)
 	if err != nil {
 		return nil, err
 	}
+	println("hi 4")
 	checksumFileDir := filepath.Dir(checksumFileURL.Path)
 	relpath, err := filepath.Rel(checksumFileDir, absPath)
 	switch {
